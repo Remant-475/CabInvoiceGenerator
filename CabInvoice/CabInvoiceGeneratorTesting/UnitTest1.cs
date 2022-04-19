@@ -1,16 +1,17 @@
 using NUnit.Framework;
 using CabInvoice;
+using System.Collections.Generic;
 
 namespace CabInvoiceGeneratorTesting
 {
     public class Tests
     {
-        InvoiceGenerator invoicegeneratorNormalRide;
+        InvoiceGenerator invoiceNormalRide;
 
         [SetUp]
         public void Setup()
         {
-            invoicegeneratorNormalRide = new InvoiceGenerator();
+            invoiceNormalRide = new InvoiceGenerator();
         }
         /// UC 1- Total Fare for Single Ride
         [Test]
@@ -20,14 +21,14 @@ namespace CabInvoiceGeneratorTesting
         {
             Ride rides = new Ride(distane, time);
             int expected = 53;
-            Assert.AreEqual(expected, invoicegeneratorNormalRide.TotalFareForSingleRide(rides));
+            Assert.AreEqual(expected, invoiceNormalRide.TotalFareForSingleRide(rides));
         }
         /// TC1.1 - Check for Invalid Distance
         [Test]
         public void ForInvaidDistance()
         {
             Ride rides = new Ride(-4, 6);
-            CabInvoiceExceptions cabInvoiceException = Assert.Throws<CabInvoiceExceptions>(() => invoicegeneratorNormalRide.TotalFareForSingleRide(rides));
+            CabInvoiceExceptions cabInvoiceException = Assert.Throws<CabInvoiceExceptions>(() => invoiceNormalRide.TotalFareForSingleRide(rides));
             Assert.AreEqual(cabInvoiceException.type, CabInvoiceExceptions.ExceptionType.Invalid_Distance);
         }
         /// TC1.2- Check for Invalid Time
@@ -35,8 +36,24 @@ namespace CabInvoiceGeneratorTesting
         public void ForInvaidTime()
         {
             Ride rides = new Ride(4, -6);
-            CabInvoiceExceptions cabInvoiceException = Assert.Throws<CabInvoiceExceptions>(() => invoicegeneratorNormalRide.TotalFareForSingleRide(rides));
+            CabInvoiceExceptions cabInvoiceException = Assert.Throws<CabInvoiceExceptions>(() => invoiceNormalRide.TotalFareForSingleRide(rides));
             Assert.AreEqual(cabInvoiceException.type, CabInvoiceExceptions.ExceptionType.Invalid_Time);
+        }
+        /// UC2 - Total fare for Multiple rides 
+        [Test]
+        public void CalculateFareForMultipleRides()
+        {
+            Ride rides_1 = new Ride(2, 2);
+            Ride rides_2 = new Ride(2, 1);
+            Ride rides_3 = new Ride(3, 3);
+            List<Ride> rides = new List<Ride>();
+            rides.Add(rides_1);
+            rides.Add(rides_2);
+            rides.Add(rides_3);
+
+
+            Assert.AreEqual(76.0d, invoiceNormalRide.TotalFareForMultipleRide(rides));
+
         }
 
 

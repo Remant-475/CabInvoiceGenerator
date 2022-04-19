@@ -12,8 +12,8 @@ namespace CabInvoice
         readonly int price_per_minute;
         readonly int minimum_fare;
         public double total_fare;
-       
-        
+
+
 
         public InvoiceGenerator()
         {
@@ -21,19 +21,31 @@ namespace CabInvoice
             this.price_per_minute = 1;
             this.minimum_fare = 5;
         }
-        
-        
-    public double TotalFareForSingleRide(Ride rides)
-    {
-        if (rides.distance < 0)
+
+
+        public double TotalFareForSingleRide(Ride rides)
         {
-            throw new CabInvoiceExceptions(CabInvoiceExceptions.ExceptionType.Invalid_Distance, "Invaid Distance");
+            if (rides.distance < 0)
+            {
+                throw new CabInvoiceExceptions(CabInvoiceExceptions.ExceptionType.Invalid_Distance, "Invaid Distance");
+            }
+            if (rides.time < 0)
+            {
+                throw new CabInvoiceExceptions(CabInvoiceExceptions.ExceptionType.Invalid_Time, "Invaid Time");
+            }
+            return Math.Max(minimum_fare, rides.distance * price_per_kilometer + rides.time * price_per_minute);
         }
-        if (rides.time < 0)
+
+       // UC-2
+        public double TotalFareForMultipleRide(List<Ride> multirides)
         {
-            throw new CabInvoiceExceptions(CabInvoiceExceptions.ExceptionType.Invalid_Time, "Invaid Time");
-        }
-        return Math.Max(minimum_fare, rides.distance * price_per_kilometer + rides.time * price_per_minute);
+            foreach (Ride rides in multirides)
+            {
+                total_fare += TotalFareForSingleRide(rides);
+
+
+            }
+            return total_fare;
         }
     }
 }
