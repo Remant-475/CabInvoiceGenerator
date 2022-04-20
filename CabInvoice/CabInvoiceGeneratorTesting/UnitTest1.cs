@@ -45,18 +45,28 @@ namespace CabInvoiceGeneratorTesting
         {
             Ride rides_1 = new Ride(2, 2);
             Ride rides_2 = new Ride(2, 1);
-            Ride rides_3 = new Ride(3, 3);
             List<Ride> rides = new List<Ride>();
             rides.Add(rides_1);
             rides.Add(rides_2);
-            rides.Add(rides_3);
-
-
-            Assert.AreEqual(76.0d, invoiceNormalRide.TotalFareForMultipleRide(rides));
+            
+            Assert.AreEqual(43.0d, invoiceNormalRide.TotalFareForMultipleRide(rides));
 
         }
+        /// UC-3 Calculte Total number of Rides and Average Fare per Ride
+        [Test]
+        public void ListOfRidesCalculateFare()
+        {
+            Ride rides_1 = new Ride(2, 2);
+            Ride rides_2 = new Ride(2, 1);
 
+            List<Ride> rides = new List<Ride>();
+            rides.Add(rides_1);
+            rides.Add(rides_2);
 
+            Assert.AreEqual(43.0d, invoiceNormalRide.InhancedInvoice(rides));
+            Assert.AreEqual(21.5d, invoiceNormalRide.averagePerRide);
+            Assert.AreEqual(2, invoiceNormalRide.numberOfRides);
 
+        }
     }
 }

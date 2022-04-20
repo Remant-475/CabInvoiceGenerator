@@ -12,7 +12,8 @@ namespace CabInvoice
         readonly int price_per_minute;
         readonly int minimum_fare;
         public double total_fare;
-
+        public int numberOfRides;
+        public double averagePerRide;
 
 
         public InvoiceGenerator()
@@ -45,6 +46,17 @@ namespace CabInvoice
 
 
             }
+            return total_fare;
+        }
+        public double InhancedInvoice(List<Ride> multirides)//uc3
+        {
+            foreach (Ride rides in multirides)
+            {
+                total_fare += TotalFareForSingleRide(rides);
+                numberOfRides += 1;
+
+            }
+            averagePerRide = total_fare / numberOfRides;
             return total_fare;
         }
     }
