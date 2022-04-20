@@ -14,6 +14,9 @@ namespace CabInvoice
         public double total_fare;
         public int numberOfRides;
         public double averagePerRide;
+        readonly int premiumPricePerKm;
+        readonly int premiumPricePerMin;
+        readonly int premiumMinimumFare;
 
 
         public InvoiceGenerator()
@@ -21,6 +24,9 @@ namespace CabInvoice
             this.price_per_kilometer = 10;
             this.price_per_minute = 1;
             this.minimum_fare = 5;
+            this.premiumPricePerKm = 15;
+            this.premiumPricePerMin = 2;
+            this.premiumMinimumFare = 20;
         }
 
 
@@ -55,6 +61,28 @@ namespace CabInvoice
                 total_fare += TotalFareForSingleRide(rides);
                 numberOfRides += 1;
 
+            }
+            averagePerRide = total_fare / numberOfRides;
+            return total_fare;
+        }
+        public double TotalFareForPremiumSingleRide(Ride rides)
+        {
+            if (rides.distance < 0)
+            {
+                throw new CabInvoiceExceptions(CabInvoiceExceptions.ExceptionType.Invalid_Distance, "Invalid Distance");
+            }
+            if (rides.time < 0)
+            {
+                throw new CabInvoiceExceptions(CabInvoiceExceptions.ExceptionType.Invalid_Time, "Invaid Time");
+            }
+            return Math.Max(premiumMinimumFare, rides.distance * premiumPricePerKm + rides.time * premiumPricePerMin);
+        }
+        public double TotalFareForPremiumMultipleRide(List<Ride> multiride)
+        {
+            foreach (Ride ride in multiride)
+            {
+                total_fare += TotalFareForPremiumSingleRide(ride);
+                numberOfRides += 1;
             }
             averagePerRide = total_fare / numberOfRides;
             return total_fare;
